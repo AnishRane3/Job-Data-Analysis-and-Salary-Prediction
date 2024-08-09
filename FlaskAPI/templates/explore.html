@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Prediction | Explore</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            padding: 20px;
+        }
+       .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 270px;
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+        }
+        .sidebar h3 {
+            color: #fff;
+        }
+        .main-content {
+            margin-left: 290px;
+            padding: 20px;
+        }
+        .nav-link {
+            color: #dcdcdc;
+        }
+        .nav-link.active {
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+        .nav-link:hover {
+            color: #fff;
+            border-radius: 5px;
+        }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4>Job Salary Prediction</h4>
+        <ul class="nav flex-column mt-5">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="http://127.0.0.1:5000/">Prediction</a>
+            </li></br>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/explore.html' %}active{% endif %}" href="http://127.0.0.1:5000/explore.html">Explore</a>
+            </li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1 class="mt-2 mb-4">Explore</h1>
+        
+        <!-- Embed EDA HTML -->
+        <iframe src="{{ url_for('static', filename='EDA_images.html') }}"></iframe>
+    </div>
+</body>
+</html>

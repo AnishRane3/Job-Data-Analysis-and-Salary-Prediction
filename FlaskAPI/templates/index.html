@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 270px;
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+        }
+        .sidebar h3 {
+            color: #fff;
+        }
+        .main-content {
+            margin-left: 290px;
+            padding: 20px;
+        }
+       .nav-link {
+           color: #dcdcdc;
+       }
+       .nav-link.active {
+           color: #fff;
+           background-color: #007bff;
+           border-radius: 5px;
+       }
+       .nav-link:hover {
+           color: #fff;
+           border-radius: 5px;
+       }
+       .form-check-input[type="radio"] {
+        width: 20px; /* Adjust the width as needed */
+        height: 20px; /* Adjust the height as needed */
+        margin-top: 6px; /* Adjust the top margin as needed */
+        }
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%; /* Make inputs full-width */
+            height: 39px; /* Adjust height as needed */
+            padding: 10px; /* Adjust padding as needed */
+            font-size: 16px; /* Adjust font size as needed */
+            border: 1px solid #ced4da; /* Add border */
+            border-radius: 5px; /* Add border radius */
+            box-sizing: border-box; /* Ensure padding and border included in width */
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h4>Job Salary Prediction</h4>
+        <ul class="nav flex-column mt-5">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="http://127.0.0.1:5000/">Prediction</a>
+            </li>
+            </br>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/explore.html' %}active{% endif %}" href="http://127.0.0.1:5000/explore.html">Explore</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1 class="mt-2 mb-4">Salary Prediction</h1>
+        <form action="/" method="post" onsubmit="return validateForm()">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Size">Size:</label>
+                        <select class="form-control" name="Size" id="Size">
+                            <option value="501 to 1000 employees">501 to 1000 employees</option>
+                            <option value="10000+ employees">10000+ employees</option>
+                            <option value="1001 to 5000 employees">1001 to 5000 employees</option>
+                            <option value="51 to 200 employees">51 to 200 employees</option>
+                            <option value="201 to 500 employees">201 to 500 employees</option>
+                            <option value="5001 to 10000 employees">5001 to 10000 employees</option>
+                            <option value="1 to 50 employees">1 to 50 employees</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Type_of_ownership">Type of ownership:</label>
+                        <select class="form-control" name="Type_of_ownership" id="Type_of_ownership">
+                            <option value="Company - Private">Company - Private</option>
+                            <option value="Other Organization">Other Organization</option>
+                            <option value="Government">Government</option>
+                            <option value="Company - Public">Company - Public</option>
+                            <option value="Hospital">Hospital</option>
+                            <option value="Subsidiary or Business Segment">Subsidiary or Business Segment</option>
+                            <option value="Nonprofit Organization">Nonprofit Organization</option>
+                            <option value="Unknown">Unknown</option>
+                            <option value="College / University">College / University</option>
+                            <option value="School / School District">School / School District</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Industry">Industry:</label>
+                        <select class="form-control" name="Industry" id="Industry">
+                            <option value="Aerospace & Defense">Aerospace & Defense</option>
+                            <option value="Health Care Services & Hospitals">Health Care Services & Hospitals</option>
+                            <option value="Security Services">Security Services</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Advertising & Marketing">Advertising & Marketing</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Banks & Credit Unions">Banks & Credit Unions</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Internet">Internet</option>
+                            <option value="Other Retail Stores">Other Retail Stores</option>
+                            <option value="Research & Development">Research & Development</option>
+                            <option value="Department, Clothing, & Shoe Stores">Department, Clothing, & Shoe Stores</option>
+                            <option value="Biotech & Pharmaceuticals">Biotech & Pharmaceuticals</option>
+                            <option value="Motion Picture Production & Distribution">Motion Picture Production & Distribution</option>
+                            <option value="Enterprise Software & Network Solutions">Enterprise Software & Network Solutions</option>
+                            <option value="Insurance Carriers">Insurance Carriers</option>
+                            <option value="Insurance Agencies & Brokerages">Insurance Agencies & Brokerages</option>
+                            <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                            <option value="Telecommunications Services">Telecommunications Services</option>
+                            <option value="IT Services">IT Services</option>
+                            <option value="Computer Hardware & Software">Computer Hardware & Software</option>
+                            <option value="Consumer Products Manufacturing">Consumer Products Manufacturing</option>
+                            <option value="Industrial Manufacturing">Industrial Manufacturing</option>
+                            <option value="Metals Brokers">Metals Brokers</option>
+                            <option value="Financial Transaction Processing">Financial Transaction Processing</option>
+                            <option value="Sporting Goods Stores">Sporting Goods Stores</option>
+                            <option value="Staffing & Outsourcing">Staffing & Outsourcing</option>
+                            <option value="Wholesale">Wholesale</option>
+                            <option value="Mining">Mining</option>
+                            <option value="Financial Analytics & Research">Financial Analytics & Research</option>
+                            <option value="Federal Agencies">Federal Agencies</option>
+                            <option value="Education Training Services">Education Training Services</option>
+                            <option value="Transportation Equipment Manufacturing">Transportation Equipment Manufacturing</option>
+                            <option value="Farm Support Services">Farm Support Services</option>
+                            <option value="TV Broadcast & Cable Networks">TV Broadcast & Cable Networks</option>
+                            <option value="Architectural & Engineering Services">Architectural & Engineering Services</option>
+                            <option value="Brokerage Services">Brokerage Services</option>
+                            <option value="Travel Agencies">Travel Agencies</option>
+                            <option value="Religious Organizations">Religious Organizations</option>
+                            <option value="Colleges & Universities">Colleges & Universities</option>
+                            <option value="Investment Banking & Asset Management">Investment Banking & Asset Management</option>
+                            <option value="Lending">Lending</option>
+                            <option value="Gambling">Gambling</option>
+                            <option value="Food & Beverage Manufacturing">Food & Beverage Manufacturing</option>
+                            <option value="Gas Stations">Gas Stations</option>
+                            <option value="Transportation Management">Transportation Management</option>
+                            <option value="Video Games">Video Games</option>
+                            <option value="Trucking">Trucking</option>
+                            <option value="Social Assistance">Social Assistance</option>
+                            <option value="Auctions & Galleries">Auctions & Galleries</option>
+                            <option value="K-12 Education">K-12 Education</option>
+                            <option value="Telecommunications Manufacturing">Telecommunications Manufacturing</option>
+                            <option value="Stock Exchanges">Stock Exchanges</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Health Care Products Manufacturing">Health Care Products Manufacturing</option>
+                            <option value="Health, Beauty, & Fitness">Health, Beauty, & Fitness</option>
+                            <option value="Consumer Product Rental">Consumer Product Rental</option>
+                            <option value="Beauty & Personal Accessories Stores">Beauty & Personal Accessories Stores</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Sector">Sector:</label>
+                        <select class="form-control" name="Sector" id="Sector">
+                            <option value="Aerospace & Defense">Aerospace & Defense</option>
+                            <option value="Health Care">Health Care</option>
+                            <option value="Business Services">Business Services</option>
+                            <option value="Oil, Gas, Energy & Utilities">Oil, Gas, Energy & Utilities</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Biotech & Pharmaceuticals">Biotech & Pharmaceuticals</option>
+                            <option value="Media">Media</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Transportation & Logistics">Transportation & Logistics</option>
+                            <option value="Telecommunications">Telecommunications</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Mining & Metals">Mining & Metals</option>
+                            <option value="Government">Government</option>
+                            <option value="Education">Education</option>
+                            <option value="Agriculture & Forestry">Agriculture & Forestry</option>
+                            <option value="Travel & Tourism">Travel & Tourism</option>
+                            <option value="Non-Profit">Non-Profit</option>
+                            <option value="Arts, Entertainment & Recreation">Arts, Entertainment & Recreation</option>
+                            <option value="Construction, Repair & Maintenance">Construction, Repair & Maintenance</option>
+                            <option value="Accounting & Legal">Accounting & Legal</option>
+                            <option value="Consumer Services">Consumer Services</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Revenue">Revenue:</label>
+                        <select class="form-control" name="Revenue" id="Revenue">
+                            <option value="$50 to $100 million (USD)">$50 to $100 million (USD)</option>
+                            <option value="$2 to $5 billion (USD)">$2 to $5 billion (USD)</option>
+                            <option value="$100 to $500 million (USD)">$100 to $500 million (USD)</option>
+                            <option value="$500 million to $1 billion (USD)">$500 million to $1 billion (USD)</option>
+                            <option value="Unknown / Non-Applicable">Unknown / Non-Applicable</option>
+                            <option value="$1 to $2 billion (USD)">$1 to $2 billion (USD)</option>
+                            <option value="$25 to $50 million (USD)">$25 to $50 million (USD)</option>
+                            <option value="$10+ billion (USD)">$10+ billion (USD)</option>
+                            <option value="$1 to $5 million (USD)">$1 to $5 million (USD)</option>
+                            <option value="$10 to $25 million (USD)">$10 to $25 million (USD)</option>
+                            <option value="$5 to $10 billion (USD)">$5 to $10 billion (USD)</option>
+                            <option value="Less than $1 million (USD)">Less than $1 million (USD)</option>
+                            <option value="$5 to $10 million (USD)">$5 to $10 million (USD)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Location_States">Location States:</label>
+                        <select class="form-control" name="Location_States" id="Location_States">
+                            <option value="NM">New Mexico (NM)</option>
+                            <option value="MD">Maryland (MD)</option>
+                            <option value="FL">Florida (FL)</option>
+                            <option value="WA">Washington (WA)</option>
+                            <option value="NY">New York (NY)</option>
+                            <option value="TX">Texas (TX)</option>
+                            <option value="CA">California (CA)</option>
+                            <option value="VA">Virginia (VA)</option>
+                            <option value="MA">Massachusetts (MA)</option>
+                            <option value="NJ">New Jersey (NJ)</option>
+                            <option value="CO">Colorado (CO)</option>
+                            <option value="IL">Illinois (IL)</option>
+                            <option value="KY">Kentucky (KY)</option>
+                            <option value="OR">Oregon (OR)</option>
+                            <option value="CT">Connecticut (CT)</option>
+                            <option value="MI">Michigan (MI)</option>
+                            <option value="DC">District of Columbia (DC)</option>
+                            <option value="OH">Ohio (OH)</option>
+                            <option value="AL">Alabama (AL)</option>
+                            <option value="MO">Missouri (MO)</option>
+                            <option value="PA">Pennsylvania (PA)</option>
+                            <option value="GA">Georgia (GA)</option>
+                            <option value="IN">Indiana (IN)</option>
+                            <option value="LA">Louisiana (LA)</option>
+                            <option value="WI">Wisconsin (WI)</option>
+                            <option value="NC">North Carolina (NC)</option>
+                            <option value="AZ">Arizona (AZ)</option>
+                            <option value="NE">Nebraska (NE)</option>
+                            <option value="MN">Minnesota (MN)</option>
+                            <option value="UT">Utah (UT)</option>
+                            <option value="TN">Tennessee (TN)</option>
+                            <option value="DE">Delaware (DE)</option>
+                            <option value="ID">Idaho (ID)</option>
+                            <option value="RI">Rhode Island (RI)</option>
+                            <option value="IA">Iowa (IA)</option>
+                            <option value="SC">South Carolina (SC)</option>
+                            <option value="KS">Kansas (KS)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Job_Roles">Job Roles:</label>
+                        <select class="form-control" name="Job_Roles" id="Job_Roles">
+                            <option value="data scientist">Data Scientist</option>
+                            <option value="none">None</option>
+                            <option value="analyst">Analyst</option>
+                            <option value="data engineer">Data Engineer</option>
+                            <option value="director">Director</option>
+                            <option value="manager">Manager</option>
+                            <option value="machine learning eng">Machine Learning Engineer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Job_levels">Job Levels:</label>
+                        <select class="form-control" name="Job_levels" id="Job_levels">
+                            <option value="none">None</option>
+                            <option value="senior">Senior</option>
+                            <option value="junior">Junior</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Rating">Rating:</label>
+                        <input type="number" step="0.1" class="form-control" name="Rating" id="Rating" required>
+                        <div class="invalid-feedback">Please enter a valid rating between 0 and 5.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Per Hour:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Per_Hour" id="Per_Hour_yes" value="1">
+                            <label class="form-check-label" for="Per_Hour_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Per_Hour" id="Per_Hour_no" value="0">
+                            <label class="form-check-label" for="Per_Hour_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employer Provided:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Employer_Provided" id="Employer_Provided_yes" value="1">
+                            <label class="form-check-label" for="Employer_Provided_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Employer_Provided" id="Employer_Provided_no" value="0">
+                            <label class="form-check-label" for="Employer_Provided_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Python Required -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Python Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Python_Req" id="Python_Req_yes" value="1">
+                            <label class="form-check-label" for="Python_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Python_Req" id="Python_Req_no" value="0">
+                            <label class="form-check-label" for="Python_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SQL Required -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>SQL Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Sql_Req" id="Sql_Req_yes" value="1">
+                            <label class="form-check-label" for="Sql_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Sql_Req" id="Sql_Req_no" value="0">
+                            <label class="form-check-label" for="Sql_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spark Required -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Spark Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Spark_Req" id="Spark_Req_yes" value="1">
+                            <label class="form-check-label" for="Spark_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Spark_Req" id="Spark_Req_no" value="0">
+                            <label class="form-check-label" for="Spark_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AWS Required -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>AWS Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Aws_Req" id="Aws_Req_yes" value="1">
+                            <label class="form-check-label" for="Aws_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Aws_Req" id="Aws_Req_no" value="0">
+                            <label class="form-check-label" for="Aws_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Required -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Excel Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Excel_Req" id="Excel_Req_yes" value="1">
+                            <label class="form-check-label" for="Excel_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Excel_Req" id="Excel_Req_no" value="0">
+                            <label class="form-check-label" for="Excel_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hadoop Required -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Hadoop Required:</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hadoop_Req" id="Hadoop_Req_yes" value="1">
+                            <label class="form-check-label" for="Hadoop_Req_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hadoop_Req" id="Hadoop_Req_no" value="0">
+                            <label class="form-check-label" for="Hadoop_Req_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Desc_Len">Description Length:</label>
+                        <input type="number" class="form-control" name="Desc_Len" id="Desc_Len" required>
+                        <div class="invalid-feedback">Please enter a valid integer for description length.</div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Num_Competitors">Number of Competitors:</label>
+                        <input type="number" class="form-control" name="Num_Competitors" id="Num_Competitors" required>
+                        <div class="invalid-feedback">Please enter a valid integer for number of competitors.</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="text-center mt-2">
+                <!-- Center align the button and add margin top for spacing -->
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 250px; height: 60px;">Predict</button>
+            </div>
+
+
+        </form>
+        {% if prediction is not none %}
+        <div class="mt-4">
+            <h2>Prediction:</h2>
+            <p>The predicted salary is: ${{ "{:,.0f}".format(prediction * 1000) }}</p>
+        </div>
+        {% endif %}
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function validateForm() {
+            // Fetch values from form
+            var rating = parseFloat(document.getElementById('Rating').value);
+            var descLen = parseInt(document.getElementById('Desc_Len').value);
+            var numCompetitors = parseInt(document.getElementById('Num_Competitors').value);
+
+            // Validate Rating
+            if (isNaN(rating) || rating < 0 || rating > 5) {
+                document.getElementById('Rating').classList.add('is-invalid');
+                return false;
+            } else {
+                document.getElementById('Rating').classList.remove('is-invalid');
+            }
+
+            // Validate Description Length
+            if (isNaN(descLen) || descLen < 0) {
+                document.getElementById('Desc_Len').classList.add('is-invalid');
+                return false;
+            } else {
+                document.getElementById('Desc_Len').classList.remove('is-invalid');
+            }
+
+            // Validate Number of Competitors
+            if (isNaN(numCompetitors) || numCompetitors < 0) {
+                document.getElementById('Num_Competitors').classList.add('is-invalid');
+                return false;
+            } else {
+                document.getElementById('Num_Competitors').classList.remove('is-invalid');
+            }
+
+            // Form is valid
+            return true;
+        }
+    </script>
+</body>
+
+</html>
